@@ -80,11 +80,9 @@ module.exports.watch = () => {
   });
 
   const buildFileName = () => {
-      var dateObj      = new Date();
-      var isoDateArray = dateObj.toLocaleDateString().split("/");
-      var date         =
-        isoDateArray[1] + "-" + isoDateArray[0] + "-" + isoDateArray[2];
-      var time         = dateObj.toTimeString().split(" ")[0].replace(/:/g, "-");
+      var dateObj = new Date();
+      var date    = dateObj.toLocaleDateString();
+      var time    = dateObj.toTimeString().split(" ")[0].replace(/:/g, "-");
       return date + "--" + time + ".jpg";
   };
 
