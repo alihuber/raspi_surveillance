@@ -1,0 +1,16 @@
+{
+    "env": {
+        "node": true
+    },
+    "extends": "airbnb-base",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "rules": {
+        "semi": 2,
+        "quotes": [2, "double"],
+        "no-console": "off",
+        "no-multi-spaces": "off"
+    }
+}
