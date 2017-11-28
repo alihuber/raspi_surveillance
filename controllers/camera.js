@@ -1,4 +1,4 @@
-const { exec }      = require("child_process").exec;
+const { exec }      = require("child_process");
 
 const activateCmd   = "motion -c /home/pi/motion.conf";
 const timestampCmd  = "node -e 'console.log(Date.now())' > /home/pi/motion/stamp.txt";
