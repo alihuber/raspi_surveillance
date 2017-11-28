@@ -2,6 +2,7 @@ const sane          = require("sane");
 const Dropbox       = require("dropbox");
 const email         = require("emailjs");
 const fs            = require("fs");
+const os            = require("os");
 
 const motionWatcher = sane("/home/pi/motion", { glob: ["**/*.jpg"] });
 const snapWatcher   = sane("/home/pi/motion", { glob: ["**/lastsnap.jpg"] });
@@ -85,7 +86,7 @@ module.exports.watch = () => {
     const dateObj = new Date();
     const date    = dateObj.toLocaleDateString();
     const time    = dateObj.toTimeString().split(" ")[0].replace(/:/g, "-");
-    return `${date} -- ${time}.jpg`;
+    return `${os.hostname()} -- ${date} -- ${time}.jpg`;
   };
 
   snapWatcher.on("change", (filepath) => {
