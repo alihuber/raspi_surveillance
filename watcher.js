@@ -1,15 +1,15 @@
-const sane          = require("sane");
-const Dropbox       = require("dropbox");
-const email         = require("emailjs");
-const fs            = require("fs");
-const os            = require("os");
+const sane = require("sane");
+const Dropbox = require("dropbox");
+const email = require("emailjs");
+const fs = require("fs");
+const os = require("os");
 
 const motionWatcher = sane("/home/pi/motion", { glob: ["**/*.jpg"] });
-const snapWatcher   = sane("/home/pi/motion", { glob: ["**/lastsnap.jpg"] });
-const stamp         = "/home/pi/motion/stamp.txt";
-const snapPath      = "/home/pi/motion/lastsnap.jpg";
+const snapWatcher = sane("/home/pi/motion", { glob: ["**/lastsnap.jpg"] });
+const stamp = "/home/pi/motion/stamp.txt";
+const snapPath = "/home/pi/motion/lastsnap.jpg";
 
-const server        = email.server.connect({
+const server = email.server.connect({
   user: process.env.EMAIL,
   password: process.env.EMAIL_PW,
   host: process.env.EMAIL_HOST,
@@ -27,8 +27,7 @@ const emailImage = (fullPath, fileName) => {
       from: process.env.EMAIL,
       to: process.env.EMAIL,
       subject: "intruder alert",
-      attachment:
-      [
+      attachment: [
         { data: cont, alternative: false },
         { path: fullPath, type: "image/jpeg", name: fileName },
       ],
@@ -52,7 +51,8 @@ const uploadImage = (fullPath, fileName) => {
   console.log("******************************");
   console.log(`Uploading image file: ${fileName}`);
   fs.readFile(fullPath, (err, cont) => {
-    dbx.filesUpload({ path: `/camera/${fileName}`, contents: cont })
+    dbx
+      .filesUpload({ path: `/camera/${fileName}`, contents: cont })
       .then(() => {
         console.log("file uploaded");
         console.log("******************************");
@@ -84,8 +84,19 @@ module.exports.watch = () => {
 
   const buildFileName = () => {
     const dateObj = new Date();
-    const date    = dateObj.toLocaleDateString();
-    const time    = dateObj.toTimeString().split(" ")[0].replace(/:/g, "-");
+    let date = dateObj.toLocaleDateString();
+    // sometimes after raspbian or nodeJS updates toLocaleDateString
+    // returns 'mm/d/yyyy' instead 'yyyy-mm-dd'
+    if (date.includes("/")) {
+      const d = date.split("/");
+      const y = d.splice(-1)[0];
+      d.splice(0, 0, y);
+      date = d.join("-");
+    }
+    const time = dateObj
+      .toTimeString()
+      .split(" ")[0]
+      .replace(/:/g, "-");
     return `${os.hostname()} -- ${date} -- ${time}.jpg`;
   };
 

@@ -1,18 +1,17 @@
 process.on("uncaughtException", console.error);
 
 const express = require("express");
-const http    = require("http");
-const path    = require("path");
-const logger  = require("morgan");
-const basic   = require("express-authentication-basic");
+const http = require("http");
+const path = require("path");
+const logger = require("morgan");
+const basic = require("express-authentication-basic");
 
 const cameraController = require("./controllers/camera");
-const watcher          = require("./watcher");
+const watcher = require("./watcher");
 
-const app   = express();
+const app = express();
 const login = basic((challenge, callback) => {
-  if (challenge.username === process.env.USER  &&
-      challenge.password === process.env.PW) {
+  if (challenge.username === process.env.USER && challenge.password === process.env.PW) {
     callback(null, true, { user: process.env.USER });
   } else {
     callback(null, false, { error: "INVALID_PASSWORD" });
@@ -25,9 +24,8 @@ app.set("views", path.join(__dirname, "views"));
 app.use(logger("dev"));
 app.use(login);
 
-app.post("/activate",   cameraController.activate);
+app.post("/activate", cameraController.activate);
 app.post("/deactivate", cameraController.deactivate);
-
 
 app.get("/", (req, res) => {
   if (req.authenticated) {

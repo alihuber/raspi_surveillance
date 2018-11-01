@@ -1,10 +1,9 @@
-const { exec }      = require("child_process");
+const { exec } = require("child_process");
 
-const activateCmd   = "motion -c /home/pi/motion.conf";
-const timestampCmd  = "node -e 'console.log(Date.now())' > /home/pi/motion/stamp.txt";
+const activateCmd = "motion -c /home/pi/motion.conf";
+const timestampCmd = "node -e 'console.log(Date.now())' > /home/pi/motion/stamp.txt";
 const deactivateCmd = "killall motion";
-const removeCmd     = "rm /home/pi/motion/*.jpg";
-
+const removeCmd = "rm /home/pi/motion/*.jpg";
 
 module.exports.activate = (req, res) => {
   if (req.authenticated) {
@@ -14,9 +13,13 @@ module.exports.activate = (req, res) => {
     exec(timestampCmd, () => {
       console.log("made timestamp");
     });
-    setTimeout(() => {
-      res.redirect("back");
-    }, 3000, res);
+    setTimeout(
+      () => {
+        res.redirect("back");
+      },
+      3000,
+      res,
+    );
   } else {
     res.status(401).send();
   }
